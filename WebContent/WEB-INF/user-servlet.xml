@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+
+    <!-- 开启注解 -->
+    
+    
+    <context:component-scan base-package="com.movbooking.controller" />
+    
+    
+    <mvc:annotation-driven>
+        <mvc:async-support default-timeout="30000" task-executor="taskExecutor"/>
+    </mvc:annotation-driven>
+    <!-- 线程配置文件 -->
+    <bean id ="taskExecutor"  class ="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+        <!-- 线程池维护线程的最少数量,线程数小于该数量时，仍会创建新线程 -->
+        <property name ="corePoolSize" value ="10" /> 
+        <!--  线程池维护线程所允许的空闲时间 -->
+        <property name ="keepAliveSeconds" value ="30" /> 
+        <!--  线程池维护线程的最大数量 -->
+        <property name ="maxPoolSize" value ="25" /> 
+        <!-- 线程池所使用的缓冲队列 -->
+        <property name ="queueCapacity" value ="100" /> 
+    </bean>
+    
+    
+    
+    <!-- static resource mapping , do not process by controller-->
+    <mvc:resources location="/resources" mapping="resources/**" cache-period="31556926" />
+    
+    <!-- when visit main page, jump to login controller -->
+    <mvc:view-controller path="/" view-name="forward:/login.html"/>
+    
+    <!-- 关联view -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    
+    <!-- 基于注释的事务，当注释中发现@Transactional时，使用id为“transactionManager”的事务管理器  -->
+    <!-- 如果没有设置transaction-manager的值，则spring以缺省默认的事务管理器来处理事务，默认事务管理器为第一个加载的事务管理器 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    
+</beans>
