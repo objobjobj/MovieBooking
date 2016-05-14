@@ -40,6 +40,8 @@
 		<mapping class="com.movbooking.entity.Movie"/>
 		<mapping class="com.movbooking.entity.VideoHall"/>
 		<mapping class="com.movbooking.entity.ShowingOfFilm"/>
+		<mapping class="com.movbooking.entity.Cinema"/>
+		<mapping class="com.movbooking.entity.Ticket"/>
 
 	</session-factory>
 </hibernate-configuration>
